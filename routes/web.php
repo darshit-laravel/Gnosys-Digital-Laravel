@@ -117,6 +117,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Admins
         Route::resource('admins', App\Http\Controllers\Admin\AdminUserController::class);
 
+        // Users
+        Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+        Route::post('user/transection-history', [App\Http\Controllers\Admin\UserController::class, 'getTransectionHistoty'])->name('users.transection.history');
+
         // Categories
         Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
 

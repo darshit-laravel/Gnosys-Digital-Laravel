@@ -217,7 +217,7 @@
                 </a>
                 @endif
 
-                <a href="{{ route('admin.products.create') }}" class="nav-link">
+                <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i> Users
                 </a>
 
@@ -339,6 +339,7 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Mobile sidebar toggle
@@ -355,5 +356,6 @@
             });
         }, 5000);
     </script>
+    @yield('script')
 </body>
 </html>

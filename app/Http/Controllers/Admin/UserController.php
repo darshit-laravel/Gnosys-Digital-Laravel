@@ -3,125 +3,116 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use PHPUnit\Metadata\Uses;
 
 class UserController extends Controller
 {
     public function index()
     {
-        if (!auth('admin')->user()->canManageAdmins()) {
-            return abort(403, 'Unauthorized action.');
-        }
-
-        $admins = Admin::latest()->get();
-        return view('admin.users.index', compact('admins'));
+        $users = User::with(['wallet:id,user_id,balance'])->get();
+        return view('admin.users.index', compact('users'));
     }
 
     public function create()
     {
-        if (!auth('admin')->user()->canManageAdmins()) {
-            return abort(403, 'Unauthorized action.');
-        }
-
-        return view('admin.admins.create');
+        return view('admin.users.create');
     }
 
     public function store(Request $request)
     {
-        if (!auth('admin')->user()->canManageAdmins()) {
-            return abort(403, 'Unauthorized action.');
-        }
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:admins',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'access_level' => 'required|in:full,limited,viewer',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'string',
+            'phone' => 'nullable|digits_between:10,12|unique:users',
         ]);
 
-        $permissions = $request->access_level === 'limited' ? ($request->permissions ?? []) : null;
-
-        Admin::create([
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone ?? null,
             'password' => Hash::make($request->password),
-            'access_level' => $request->access_level,
-            'permissions' => $permissions,
-            'is_active' => $request->has('is_active'),
+            'is_active' => $request->is_active == 1 ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.admins.index')
-            ->with('success', 'Admin user created successfully.');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User created successfully.');
     }
 
-    public function edit(Admin $admin)
+    public function edit(User $user)
     {
-        if (!auth('admin')->user()->canManageAdmins()) {
-            return abort(403, 'Unauthorized action.');
-        }
-
-        return view('admin.admins.edit', compact('admin'));
+        return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, Admin $admin)
+    public function update(Request $request, User $user)
     {
-        if (!auth('admin')->user()->canManageAdmins()) {
-            return abort(403, 'Unauthorized action.');
-        }
-
-        if ($admin->id === 1 && auth('admin')->id() !== 1) {
-            return redirect()->back()->with('error', 'You cannot modify the super admin.');
-        }
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('admins')->ignore($admin->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'phone' => [
+                'nullable',
+                'digits_between:10,12',
+                Rule::unique('users')->ignore($user->id),
+            ],
             'password' => 'nullable|string|min:8|confirmed',
-            'access_level' => 'required|in:full,limited,viewer',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'string',
         ]);
 
-        $permissions = $request->access_level === 'limited' ? ($request->permissions ?? []) : null;
-
-        $admin->name = $request->name;
-        $admin->email = $request->email;
-        $admin->access_level = $admin->id === 1 ? 'full' : $request->access_level; // Super admin is always full
-        $admin->permissions = $permissions;
-        $admin->is_active = $request->has('is_active');
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone ?? null;
+        $user->is_active = $request->is_active == 1 ? 1 : 0;
 
         if ($request->filled('password')) {
-            $admin->password = Hash::make($request->password);
+            $user->password = Hash::make($request->password);
         }
 
-        $admin->save();
+        $user->update();
 
-        return redirect()->route('admin.admins.index')
-            ->with('success', 'Admin user updated successfully.');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User updated successfully.');
     }
 
-    public function destroy(Admin $admin)
+    public function destroy(User $user)
     {
-        if (!auth('admin')->user()->canManageAdmins()) {
-            return abort(403, 'Unauthorized action.');
+        $user->delete();
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User deleted successfully.');
+    }
+
+    public function getTransectionHistoty(Request $request)
+    {
+        $id = $request->id ? decrypt($request->id) : '';
+
+        if ($id) {
+
+            $historys = User::with([
+                'wallet.histories' => function ($query) use ($id) {
+                    $query->where('user_id', $id)
+                        ->latest();
+                }
+            ])->find($id);
+
+            $html = view(
+                'admin.users.wallet-history',
+                compact('historys')
+            )->render();
+
+            return response()->json([
+                'status' => true,
+                'html'   => $html
+            ]);
         }
 
-        if ($admin->id === 1) {
-            return back()->with('error', 'Cannot delete super admin.');
-        }
-
-        if ($admin->id === auth('admin')->id()) {
-             return back()->with('error', 'Cannot delete yourself.');
-        }
-
-        $admin->delete();
-
-        return redirect()->route('admin.admins.index')
-            ->with('success', 'Admin user deleted successfully.');
+        return response()->json([
+            'status' => false,
+            'message' => 'Invalid User'
+        ]);
     }
 }
