@@ -88,9 +88,11 @@ Route::get('/erpnext-for-healthcare', function () {
 Route::get('/custom-warehouse-inventory-management-software-development', function () {
     return view('custom-warehouse-inventory-management-software-development');
 })->name('custom-warehouse-inventory-management-software-development');
+
 Route::get('/privacy-policy', function () {
     return view('privacy-policy');
 })->name('privacy-policy');
+
 Route::get('/refund-return-policy', function () {
     return view('refund-return-policy');
 })->name('refund-return-policy');

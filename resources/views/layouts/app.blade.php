@@ -21,6 +21,10 @@
     @stack('styles')
 
     <style>
+        html, body {
+            max-width: 100%;    
+            overflow-x: hidden;
+        }
         header.navbar-glass {
             background: rgba(255,255,255,0.95);
             box-shadow: 0 6px 20px rgba(15,23,42,0.06);
@@ -32,20 +36,109 @@
         .search-input { border: none; background: transparent; height:40px; }
         .avatar { width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:#eef2ff; color:#0d6efd; font-weight:700; }
         .avatar-lg { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#3a7bd5,#00d2ff); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700; }
-        main { padding-top:120px; }
+        main { padding-top:140px; }        
+        /* Secondary Nav & Dropdown Styles */
+        .secondary-nav {
+            border-top: 1px solid rgba(15,23,42,0.04);
+            background: #fff;
+            padding: 0;
+        }
+        .secondary-nav .navbar-nav {
+            width: 100%;
+            justify-content: center;
+        }
+        .secondary-nav .nav-item {
+            position: relative;
+        }
+        .secondary-nav .nav-link {
+            padding: 1rem 1.5rem;
+            color: #003b73;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .secondary-nav .nav-link:hover, .secondary-nav .nav-link:focus {
+            color: #0d6efd;
+            background: transparent;
+        }
+        .secondary-nav .dropdown-item {
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            color: #1e293b;
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+            white-space: normal;
+        }
+        .secondary-nav .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        .secondary-nav .dropdown-item:hover {
+            background-color: #f8fafc;
+            color: #0056b3;
+            padding-left: 1.8rem;
+        }
+        .dropdown-submenu {
+            position: relative;
+        }
+        @media (min-width: 992px) {
+            .secondary-nav .dropdown-menu {
+                border: none;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+                border-radius: 0 0 8px 8px;
+                border-top: 3px solid #0056b3;
+                padding: 0;
+                margin-top: -1px;
+                min-width: 260px;
+            }
+            .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -3px;
+                border-radius: 8px;
+            }
+        }
+        @media (max-width: 991px) {
+            .secondary-nav .dropdown-menu {
+                border: none;
+                background: #f8fafc;
+                margin: 0;
+                padding: 0;
+            }
+            .dropdown-submenu > .dropdown-menu {
+                background: #e2e8f0;
+                padding-left: 1rem;
+            }
+            .secondary-nav .nav-link {
+                padding: 0.8rem 1rem;
+            }
+            .navbar-brand img {
+                max-height: 40px !important;
+            }
+        }
+        .sale-badge {
+            background-color: #8b9900;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 50%;
+            margin-left: 8px;
+            font-weight: bold;
+            position: absolute;
+            transform: rotate(-10deg);
+            margin-top: -10px;
+        }
     </style>
 </head>
 
 <body>
 
     <header class="fixed-top navbar-glass top-header">
-        <div class="container d-flex align-items-center justify-content-between">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('images/logo.webp') }}" alt="Gnosys Digital Logo" style="max-height:52px;">
+        <div class="container d-flex align-items-center justify-content-between py-2">
+            <a class="navbar-brand me-auto" href="{{ url('/') }}">
+                <img src="{{ asset('images/logo.webp') }}" alt="Gnosys Digital Logo" style="max-height:52px; width:auto;" class="img-fluid">
             </a>
 
             <div class="d-flex align-items-center gap-2">
-                <div class="search-wrapper">
+                <div class="search-wrapper d-none d-lg-block">
                     <form action="{{ url('/') }}" method="GET" class="d-flex align-items-center">
                         <div class="search-input-wrapper d-flex align-items-center">
                             <input type="search" name="s" class="search-input" placeholder="Search...">
@@ -62,8 +155,8 @@
                 @auth
                     <div class="dropdown user-dropdown">
                         <button class="btn btn-sm btn-outline-dark user-trigger dropdown-toggle d-flex align-items-center" id="userMenuBtnTop" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="avatar me-2">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</span>
-                            <span class="user-name">{{ auth()->user()->name }}</span>
+                            <span class="avatar me-0 me-md-2">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</span>
+                            <span class="user-name d-none d-md-inline">{{ auth()->user()->name }}</span>
                         </button>
 
                         <div class="dropdown-menu dropdown-menu-end p-3 profile-card" aria-labelledby="userMenuBtnTop">
@@ -132,29 +225,119 @@
                         </div>
                     </div>
                 @endauth
+
+                <!-- Hamburger for mobile -->
+                <button class="navbar-toggler d-lg-none border-0 ms-1 text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#secondaryNavCollapse" aria-controls="secondaryNavCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars fa-lg"></i>
+                </button>
             </div>
         </div>
 
         <!-- Secondary navigation: main menu below the top bar -->
-        <nav class="secondary-nav" aria-label="Main navigation">
+        <nav class="secondary-nav navbar navbar-expand-lg py-0" aria-label="Main navigation">
             <div class="container">
-                <div class="collapse navbar-collapse" id="secondaryNav">
-                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="{{ url('/digital-products') }}">Digital Products</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url('/digital-services') }}">Digital Services</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('blog.index') }}">Blog</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url('/learn') }}">Learn</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url('/video') }}">Video</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('about.culture') }}">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('engagement-models') }}">Engagement Models</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('seo-services') }}">SEO Services</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('erpnext-implementation') }}">ERPNext</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('channel-distribution-management-software-development') }}">Channel Software</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('custom-manufacturing-operations-control-software-development') }}">Manufacturing Software</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('supplychain-logistic') }}">Supplychain</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('privacy-policy') }}">Privacy</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('refund-return-policy') }}">Refund Policy</a></li>
-                        <li class="nav-item ms-lg-2"><a class="nav-link btn-blueprint-nav" href="{{ route('10cr.blueprint.session3') }}"><i class="fas fa-rocket me-1"></i> 10 CR Blueprint</a></li>
+                <div class="collapse navbar-collapse" id="secondaryNavCollapse">
+                    <!-- Mobile Search -->
+                    <div class="d-lg-none w-100 p-3 pb-0">
+                        <form action="{{ url('/') }}" method="GET" class="d-flex align-items-center w-100">
+                            <div class="search-input-wrapper d-flex align-items-center w-100 bg-light">
+                                <input type="search" name="s" class="search-input w-100" placeholder="Search...">
+                                <button class="btn btn-link p-0 ms-2" type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <ul class="navbar-nav gap-2 gap-lg-4 pb-3 pb-lg-0 w-100">
+                        
+                        <!-- Digital Products -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="digitalProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Digital Products
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="digitalProductsDropdown">
+                                <li><a class="dropdown-item" href="{{ url('/digital-products') }}"><b>All Digital Products</b></a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">AI Tools & Automation Packs</a></li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center position-relative" href="#">
+                                        eBooks & Guides                
+                                    </a>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Hosting Add-ons</a></li>
+                                <li><a class="dropdown-item" href="#">Marketing Kits</a></li>
+                                <li><a class="dropdown-item" href="#">Templates & Frameworks</a></li>
+                                <li><a class="dropdown-item" href="#">WordPress Themes & Plugins</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Digital Services -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="digitalServicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Digital Services
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="digitalServicesDropdown">
+                                <li><a class="dropdown-item" href="{{ url('/digital-services') }}"><b>All Digital Services</b></a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Custom Development</a></li>
+                                <li><a class="dropdown-item" href="#">Digital Marketing</a></li>
+                                <li><a class="dropdown-item" href="#">eCommerce Development</a></li>
+                                <li><a class="dropdown-item" href="#">eCommerce Operations Support</a></li>
+                                <li><a class="dropdown-item" href="#">SEO & Content</a></li>
+                                <li><a class="dropdown-item" href="#">Server & Devops</a></li>
+                                <li><a class="dropdown-item" href="#">Social Media Management</a></li>
+                                <li><a class="dropdown-item" href="#">Web & App Development</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Solutions -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="solutionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Solutions
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="solutionsDropdown">
+                                <li class="dropdown-submenu">
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                        ERPNext Implementation <i class="fas fa-chevron-right small text-muted d-none d-lg-block"></i><i class="fas fa-chevron-down small text-muted d-lg-none"></i>
+                                    </a>
+                                    <ul class="dropdown-menu shadow-sm">
+                                        <li><a class="dropdown-item" href="{{ route('erpnext-implementation') }}"><b>View All ERPNext</b></a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext For Healthcare</a></li>
+                                        <li><a class="dropdown-item" href="#">EPC Project Control with ERPNext</a></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext for E-commerce</a></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext for Education Institutions</a></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext for Financial Services</a></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext for Non-Profits & NGOs</a></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext for Professional Services Firms</a></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext for Retail SMEs</a></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext for Trading & Distribution SMEs</a></li>
+                                        <li><a class="dropdown-item" href="#">ERPNext Solutions for Manufacturing SMEs</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="dropdown-item" href="{{ route('channel-distribution-management-software-development') }}">Channel & Distribution</a></li>
+                                <li><a class="dropdown-item" href="{{ route('custom-manufacturing-operations-control-software-development') }}">Custom Manufacturing</a></li>
+                                <li><a class="dropdown-item" href="#">Custom Warehouse & Inventory</a></li>
+                                <li><a class="dropdown-item" href="{{ route('supplychain-logistic') }}">Supply Chain & Logistics</a></li>
+                                <li><a class="dropdown-item" href="{{ route('seo-services') }}">SEO Services</a></li>
+                                <li><a class="dropdown-item" href="#">Case Study</a></li>
+                                <li><a class="dropdown-item" href="{{ route('blog.index') }}">Blog</a></li>
+                            </ul>
+                        </li>
+
+                    <!-- About Us -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="aboutUsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            About Us
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="aboutUsDropdown">
+                            <li><a class="dropdown-item" href="{{ route('contact') }}">Contact</a></li>
+                            <li><a class="dropdown-item" href="{{ route('about.culture') }}">Culture Of Change</a></li>
+                            <li><a class="dropdown-item" href="{{ route('engagement-models') }}">Engagement Models</a></li>
+                            <li><a class="dropdown-item" href="{{ route('refund-return-policy') }}">Refund policy</a></li>
+                            <li><a class="dropdown-item" href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
+                        </ul>
+                    </li>
+
                     </ul>
                 </div>
             </div>
@@ -427,6 +610,15 @@
 
                     return false;
                 }
+            });
+
+            // Submenu logic for mobile and desktop click behavior
+            $('.dropdown-submenu > a').on('click', function(e) {
+                var submenu = $(this).next('.dropdown-menu');
+                $('.dropdown-submenu .dropdown-menu').not(submenu).removeClass('show');
+                submenu.toggleClass('show');
+                e.preventDefault();
+                e.stopPropagation();
             });
 
         });

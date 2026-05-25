@@ -5,7 +5,7 @@
             <th>Date</th>
             <th>Type</th>
             <th>Current Balance</th>
-            <th>Amount</th>
+            <th>Amount Added</th>
             <th>Balance After</th>
             <th>Status</th>
         </tr>
