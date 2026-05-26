@@ -4,11 +4,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return auth()->check()
-        ? redirect()->route('digital-products')
-        : redirect()->route('login');
-})->name('home');
+Route::get('/', [FrontendController::class, 'home'])->name('home');
 
 // User Authentication
 Route::middleware('guest')->group(function () {
@@ -16,7 +12,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.post');
     Route::get('/register', [App\Http\Controllers\AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register.post');
-
 });
 
 Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');

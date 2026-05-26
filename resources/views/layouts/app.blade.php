@@ -34,8 +34,216 @@
         .navbar-nav .nav-link:hover { color: #0d6efd; background: rgba(13,110,253,0.06); border-radius:8px; }
         .search-input-wrapper { background: #f7fbff; border-radius: 999px; padding: 4px 8px; border:1px solid rgba(15,23,42,0.06); }
         .search-input { border: none; background: transparent; height:40px; }
-        .avatar { width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:#eef2ff; color:#0d6efd; font-weight:700; }
-        .avatar-lg { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#3a7bd5,#00d2ff); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700; }
+        .search-input:focus { outline: none; }
+        
+        /* New Premium User Profile Styles */
+        .user-trigger {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            padding: 5px 16px 5px 6px;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+        .user-trigger:hover, .user-trigger:focus, .user-trigger[aria-expanded="true"] {
+            background: #eef2ff;
+            border-color: #0d6efd;
+            color: #0d6efd !important;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08);
+        }
+        .user-trigger .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #0d6efd;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        .user-trigger:hover .avatar, .user-trigger[aria-expanded="true"] .avatar {
+            background: #0056b3;
+        }
+        .user-trigger::after {
+            margin-left: 8px;
+            color: #64748b;
+            transition: color 0.3s ease;
+        }
+        .user-trigger:hover::after, .user-trigger[aria-expanded="true"]::after {
+            color: #0d6efd;
+        }
+        .profile-card {
+            min-width: 320px;
+            border: 1px solid rgba(15, 23, 42, 0.08) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.12) !important;
+            padding: 1.25rem !important;
+            margin-top: 12px !important;
+            border-top: 4px solid #0d6efd !important;
+            animation: dropdownFadeIn 0.25s ease-out;
+        }
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .profile-card-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 1rem;
+        }
+        .profile-card .avatar-lg {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0d6efd, #0056b3);
+            color: #ffffff;
+            font-size: 1.35rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+        }
+        .profile-card .user-name {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 1.05rem;
+            line-height: 1.2;
+        }
+        .profile-card .user-email {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .wallet-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 1.1rem;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15);
+        }
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .wallet-card .wallet-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .wallet-card .wallet-balance {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #10b981; /* Premium Emerald/Green */
+            margin-bottom: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .wallet-card .add-balance-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .wallet-card .add-balance-btn:hover {
+            background: #ffffff;
+            color: #0f172a !important;
+            border-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.15);
+        }
+        .wallet-card .wallet-icon {
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.08);
+            position: absolute;
+            bottom: 5px;
+            right: 15px;
+            pointer-events: none;
+        }
+        .profile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 0.75rem;
+        }
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.65rem 0.85rem;
+            border-radius: 8px;
+            color: #475569 !important;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .profile-menu-item:hover {
+            background: #f1f5f9;
+            color: #0d6efd !important;
+        }
+        .profile-menu-item i {
+            font-size: 1.1rem;
+            color: #64748b;
+            transition: all 0.2s ease;
+            width: 20px;
+            text-align: center;
+        }
+        .profile-menu-item:hover i {
+            color: #0d6efd;
+        }
+        .profile-menu-item.logout-item {
+            color: #dc2626 !important;
+        }
+        .profile-menu-item.logout-item:hover {
+            background: #fef2f2;
+            color: #b91c1c !important;
+        }
+        .profile-menu-item.logout-item i {
+            color: #f87171;
+        }
+        .profile-menu-item.logout-item:hover i {
+            color: #b91c1c;
+        }
         main { padding-top:140px; }        
         /* Secondary Nav & Dropdown Styles */
         .secondary-nav {
@@ -133,20 +341,20 @@
 
     <header class="fixed-top navbar-glass top-header">
         <div class="container d-flex align-items-center justify-content-between py-2">
-            <a class="navbar-brand me-auto" href="{{ url('/') }}">
+            <a class="navbar-brand" href="{{ url('/') }}">
                 <img src="{{ asset('images/logo.webp') }}" alt="Gnosys Digital Logo" style="max-height:52px; width:auto;" class="img-fluid">
             </a>
 
-            <div class="d-flex align-items-center gap-2">
-                <div class="search-wrapper d-none d-lg-block">
-                    <form action="{{ url('/') }}" method="GET" class="d-flex align-items-center">
-                        <div class="search-input-wrapper d-flex align-items-center">
-                            <input type="search" name="s" class="search-input" placeholder="Search...">
-                            <button class="btn btn-link p-0 ms-2" type="submit"><i class="fas fa-search"></i></button>
-                        </div>
-                    </form>
-                </div>
+            <div class="search-wrapper d-none d-lg-block mx-4" style="flex: 1; max-width: 500px;">
+                <form action="{{ url('/') }}" method="GET" class="d-flex align-items-center w-100">
+                    <div class="search-input-wrapper d-flex align-items-center w-100 px-3">
+                        <input type="search" name="s" class="search-input w-100" placeholder="Search..." style="outline: none;">
+                        <button class="btn btn-link p-0 ms-2 text-dark" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
 
+            <div class="d-flex align-items-center gap-2">
                 @guest
                     <a href="{{ route('login') }}" class="btn btn-sm btn-outline-dark">Login</a>
                     <a href="{{ route('register') }}" class="btn btn-sm btn-primary">Register</a>
@@ -154,71 +362,58 @@
 
                 @auth
                     <div class="dropdown user-dropdown">
-                        <button class="btn btn-sm btn-outline-dark user-trigger dropdown-toggle d-flex align-items-center" id="userMenuBtnTop" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="user-trigger dropdown-toggle d-flex align-items-center" id="userMenuBtnTop" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="avatar me-0 me-md-2">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</span>
                             <span class="user-name d-none d-md-inline">{{ auth()->user()->name }}</span>
                         </button>
 
-                        <div class="dropdown-menu dropdown-menu-end p-3 profile-card" aria-labelledby="userMenuBtnTop">
+                        <div class="dropdown-menu dropdown-menu-end profile-card" aria-labelledby="userMenuBtnTop">
 
-                            <!-- User Info -->
-                            <div class="d-flex align-items-center mb-3">
+                            <!-- User Info Header -->
+                            <div class="profile-card-header">
                                 <div class="avatar-lg me-3">
                                     {{ strtoupper(substr(auth()->user()->name,0,1)) }}
                                 </div>
                                 <div>
-                                    <h6 class="mb-0">{{ auth()->user()->name }}</h6>
-                                    <div class="text-muted small">{{ auth()->user()->email }}</div>
+                                    <div class="user-name">{{ auth()->user()->name }}</div>
+                                    <div class="user-email">{{ auth()->user()->email }}</div>
+                                    <div class="small text-muted mt-1" style="font-size: 0.75rem;">
+                                        Member since: <strong>{{ auth()->user()->created_at->format('M Y') }}</strong>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Wallet Card -->
-                            <div class="wallet-card mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
+                            <div class="wallet-card">
+                                <div class="wallet-title">
+                                    <i class="fas fa-wallet"></i> Wallet Balance
+                                </div>
 
-                                    <!-- Left -->
-                                    <div>
-                                        <div class="wallet-title">
-                                            <i class="bi bi-wallet2 me-1"></i> Wallet Balance
-                                        </div>
+                                <div class="wallet-balance WalletAmountCount">
+                                    $ {{ number_format(auth()->user()->wallet?->balance ?? 0, 2) }}
+                                </div>
 
-                                        <h5 class="mb-2 fw-bold text-success WalletAmountCount">
-                                            $ {{ number_format(auth()->user()->wallet?->balance ?? 0, 2) }}
-                                        </h5>
+                                <!-- Add Balance Button -->
+                                <a href="#" class="add-balance-btn" data-bs-toggle="modal" data-bs-target="#WalletCardModal">
+                                    <i class="fas fa-plus-circle"></i> Add Balance
+                                </a>
 
-                                        <!-- Add Balance Button -->
-                                        <a href="#" class="btn btn-success btn-sm add-balance-btn" data-bs-toggle="modal" data-bs-target="#WalletCardModal">
-                                            <i class="bi bi-plus-circle me-1"></i>
-                                            Add Balance
-                                        </a>
-                                    </div>
-
-                                    <!-- Right -->
-                                    <div class="wallet-icon">
-                                        <i class="bi bi-credit-card-2-front"></i>
-                                    </div>
-
+                                <!-- Right Icon -->
+                                <div class="wallet-icon">
+                                    <i class="fas fa-credit-card"></i>
                                 </div>
                             </div>
 
-                            <!-- Registered Date -->
-                            <div class="mb-2 small text-muted">
-                                Registered:
-                                <strong class="text-dark">
-                                    {{ auth()->user()->created_at->format('F d, Y') }}
-                                </strong>
-                            </div>
-
-                            <!-- Buttons -->
-                            <div class="d-grid gap-2">
-                                <a href="{{ route('profile') }}" class="btn btn-primary btn-sm">
-                                    View Profile
+                            <!-- Navigation Links -->
+                            <div class="profile-menu-links">
+                                <a href="{{ route('profile') }}" class="profile-menu-item">
+                                    <i class="fas fa-user-circle"></i> My Profile
                                 </a>
-
-                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                
+                                <form action="{{ route('logout') }}" method="POST" class="m-0 w-100">
                                     @csrf
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                                        Logout
+                                    <button type="submit" class="profile-menu-item logout-item border-0 bg-transparent w-100 text-start" style="outline: none;">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
                                     </button>
                                 </form>
                             </div>

@@ -13,6 +13,8 @@
         background-repeat: no-repeat;
         min-height: 600px;
     ">
+
+    
     {{-- Dark overlay --}}
     <div class="position-absolute top-0 start-0 w-100 h-100"
          style="background: linear-gradient(135deg, rgba(10,37,64,0.93) 0%, rgba(14,52,96,0.90) 60%, rgba(22,61,110,0.87) 100%); z-index:1;"></div>
