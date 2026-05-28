@@ -83,7 +83,7 @@
 
     <!-- Culture of Change -->
     <section class="section-padding bg-dark text-white"
-        style="background: linear-gradient(rgba(0,34,51,0.9), rgba(0,34,51,0.9)), url('{{ $cultureCta->image_url ?? 'https://images.unsplash.com/photo-1522071820081-009f0129c71c' }}') center/cover;">
+        style="background: linear-gradient(rgba(0,34,51,0.9), rgba(0,34,51,0.9)), url('{{ $cultureCta->image_url ?? asset('/images/banner.webp') }}') center/cover;">
         <div class="container text-center">
             <div class="row justify-content-center">
                 <div class="col-lg-8" data-aos="zoom-in">
@@ -146,9 +146,9 @@
                         <img src="{{ $product->image_url }}"
                             alt="{{ $product->title }}" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
                         <div class="product-body text-center flex-grow-1 d-flex flex-column p-4">
-                            <h5 class="mb-3">{{ $product->title }}</h5>
+                            <h5 class="mb-3 product-title">{{ $product->title }}</h5>
                             <p class="fw-bold fs-4 text-dark mb-4">{{ $product->formatted_price }}</p>
-                            <a href="#" class="btn-gnosys-outline w-100 mt-auto" data-product-id="{{ $product->id }}">Add to cart</a>
+                            <button type="button" class="btn-gnosys-outline w-100 mt-auto btn-add-to-cart" data-product-price="0.00" data-product-id="{{ encrypt($product->id) }}" data-product-type="product">Add to cart</button>
                         </div>
                     </div>
                 </div>
@@ -294,5 +294,9 @@
             </div>
         </div>
     </section>
+
+    @push('scripts')
+
+    @endpush
 
 @endsection

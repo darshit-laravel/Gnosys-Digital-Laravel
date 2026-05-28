@@ -30,7 +30,7 @@
                                     <i class="fas fa-th-large me-2"></i> All Products
                                 </a>
                                 @foreach($categories as $cat)
-                                <a href="{{ route('digital-products.category', $cat->slug) }}" 
+                                <a href="{{ route('digital-products.category', $cat->slug) }}"
                                    class="list-group-item list-group-item-action p-3 {{ request()->route('slug') == $cat->slug ? 'active' : '' }}">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span><i class="fas fa-chevron-right me-2 small"></i> {{ $cat->name }}</span>
@@ -66,14 +66,14 @@
                             </p>
                         </div>
                     </div>
-                    
+
                     @if($products->count() > 0)
                     <div class="row g-4" id="productsGrid">
                         @foreach($products as $product)
                         <div class="col-md-6 col-lg-4 product-item" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3 + 1) * 100 }}">
                             <div class="product-card h-100 d-flex flex-column border-0 shadow-sm">
                                 <div class="product-image position-relative">
-                                    <img src="{{ $product->image_url }}" alt="{{ $product->title }}" class="img-fluid rounded-top" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->title }}" class="product-img img-fluid rounded-top" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
                                     @if($product->badge)
                                         <div class="product-badge badge bg-primary position-absolute top-0 end-0 m-3 px-3 py-2">{{ $product->badge }}</div>
                                     @endif
@@ -93,7 +93,7 @@
                                             </div>
                                             <span class="text-muted small"><i class="fas fa-folder me-1"></i> {{ $product->categoryRelationship->name ?? $product->category }}</span>
                                         </div>
-                                        <button class="btn btn-outline-dark w-100 add-to-cart-btn" data-product-id="{{ $product->id }}">
+                                        <button class="btn btn-outline-dark w-100 btn-add-to-cart" data-product-id="{{ encrypt($product->id) }}" data-product-price="{{ $product->price }}" data-product-type="product">
                                             <i class="fas fa-shopping-cart me-2"></i> Add to Cart
                                         </button>
                                     </div>
@@ -186,13 +186,13 @@ class ShoppingCart {
         this.cart = [];
         this.init();
     }
-    
+
     init() {
         this.loadCart();
         this.setupEventListeners();
         this.updateCartUI();
     }
-    
+
     setupEventListeners() {
         // Add to cart buttons
         document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
@@ -209,37 +209,37 @@ class ShoppingCart {
                 this.addToCart(product);
             });
         });
-        
+
         // Cart sidebar controls
         document.getElementById('closeCartBtn')?.addEventListener('click', () => this.closeCart());
         document.getElementById('cartOverlay')?.addEventListener('click', () => this.closeCart());
-        
+
         // Shopping bag icon in navbar
         document.querySelector('.fa-shopping-bag')?.parentElement.addEventListener('click', (e) => {
             e.preventDefault();
             this.toggleCart();
         });
     }
-    
+
     addToCart(product) {
         const existingItem = this.cart.find(item => item.id === product.id);
-        
+
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
             this.cart.push(product);
         }
-        
+
         this.saveCart();
         this.updateCartUI();
         this.showNotification(`${product.title} added to cart!`);
-        
+
         // Update cart badge
         const badge = document.querySelector('.fa-shopping-bag').nextElementSibling;
         if (badge) {
             badge.textContent = this.getTotalItems();
         }
-        
+
         // Change Add to Cart button to View Cart
         const button = document.querySelector(`[data-product-id="${product.id}"]`);
         if (button) {
@@ -249,13 +249,13 @@ class ShoppingCart {
             button.onclick = () => this.openCart();
         }
     }
-    
+
     removeFromCart(productId) {
         this.cart = this.cart.filter(item => item.id !== productId);
         this.saveCart();
         this.updateCartUI();
     }
-    
+
     updateQuantity(productId, quantity) {
         const item = this.cart.find(item => item.id === productId);
         if (item) {
@@ -264,22 +264,22 @@ class ShoppingCart {
             this.updateCartUI();
         }
     }
-    
+
     getTotalItems() {
         return this.cart.reduce((total, item) => total + item.quantity, 0);
     }
-    
+
     getTotalPrice() {
         return this.cart.reduce((total, item) => {
             const price = parseFloat(item.price.replace('$', ''));
             return total + (price * item.quantity);
         }, 0);
     }
-    
+
     updateCartUI() {
         const cartItems = document.getElementById('cartItems');
         const cartTotal = document.getElementById('cartTotal');
-        
+
         if (this.cart.length === 0) {
             cartItems.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
         } else {
@@ -301,34 +301,34 @@ class ShoppingCart {
                 </div>
             `).join('');
         }
-        
+
         cartTotal.textContent = `$${this.getTotalPrice().toFixed(2)}`;
     }
-    
+
     showNotification(message) {
         const notification = document.getElementById('cartNotification');
         const messageEl = document.getElementById('cartMessage');
-        
+
         messageEl.textContent = message;
         notification.classList.add('show');
-        
+
         setTimeout(() => {
             notification.classList.remove('show');
         }, 3000);
     }
-    
+
     openCart() {
         document.getElementById('cartSidebar').classList.add('open');
         document.getElementById('cartOverlay').classList.add('show');
         document.body.style.overflow = 'hidden';
     }
-    
+
     closeCart() {
         document.getElementById('cartSidebar').classList.remove('open');
         document.getElementById('cartOverlay').classList.remove('show');
         document.body.style.overflow = '';
     }
-    
+
     toggleCart() {
         const isOpen = document.getElementById('cartSidebar').classList.contains('open');
         if (isOpen) {
@@ -337,11 +337,11 @@ class ShoppingCart {
             this.openCart();
         }
     }
-    
+
     saveCart() {
         localStorage.setItem('shoppingCart', JSON.stringify(this.cart));
     }
-    
+
     loadCart() {
         const savedCart = localStorage.getItem('shoppingCart');
         if (savedCart) {
@@ -355,32 +355,32 @@ class CategoryFilter {
     constructor() {
         this.init();
     }
-    
+
     init() {
         this.setupEventListeners();
         this.showCategoryFromHash();
     }
-    
+
     setupEventListeners() {
         // Listen for hash changes
         window.addEventListener('hashchange', () => {
             this.showCategoryFromHash();
         });
-        
+
         // Listen for initial page load
         document.addEventListener('DOMContentLoaded', () => {
             this.showCategoryFromHash();
         });
     }
-    
+
     showCategoryFromHash() {
         const hash = window.location.hash.substring(1); // Remove # symbol
-        
+
         // Hide all category sections
         document.querySelectorAll('.category-section').forEach(section => {
             section.style.display = 'none';
         });
-        
+
         // Show the appropriate category
         if (hash && hash !== 'all-products') {
             const targetSection = document.getElementById(hash);

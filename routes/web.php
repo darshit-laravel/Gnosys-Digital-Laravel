@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +15,12 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [App\Http\Controllers\AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register.post');
 });
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/checkout', [CartController::class, 'checkoutIndex'])->name('checkout');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/product/add-to-cart', [CartController::class, 'addToCart'])->name('addtocart');
 
 Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');
 

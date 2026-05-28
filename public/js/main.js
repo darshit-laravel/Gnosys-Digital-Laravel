@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const menu = submenu.querySelector('.submenu');
 
             // Handle ERP submenu
-            if (toggle.classList.contains('erp-toggle')) {
+            if (toggle && toggle.classList.contains('erp-toggle')) {
                 // Desktop: hover opens submenu, click navigates
                 if (window.innerWidth > 991) {
                     submenu.addEventListener('mouseenter', function() {
