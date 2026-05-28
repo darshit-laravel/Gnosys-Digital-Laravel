@@ -126,83 +126,132 @@ class CartController extends Controller
                 ->where('product_id', $realProductId)
                 ->delete();
 
-            if ($deleted) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Item removed from cart.',
+                'cart'    => Cart::where('user_id', $authUser)->count(),
+            ], 200);
+
+            return response()->json(['error' => 'Item not found in cart.'], 404);
+
+        } else {
+            $cart = session()->get('cart', []);
+
+            if (isset($cart[$realProductId])) {
+
+                unset($cart[$realProductId]);
+
+                session()->put('cart', $cart);
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Item removed from cart.',
+                    'message' => 'Item removed from session cart.',
+                    'cart'    => !empty($cart) ? count($cart) : 0,
                 ], 200);
             }
 
-            return response()->json(['error' => 'Item not found.'], 404);
+            return response()->json(['error' => 'Item not found in session cart.'], 404);
         }
-
-        return response()->json(['error' => 'Unauthorized.'], 401);
     }
 
-    public function addToCart(Request $request) {
-
+    public function addToCart(Request $request)
+    {
         $request->validate([
             'product_id'    => 'required|string',
             'product_title' => 'required|string|max:255',
             'product_img'   => 'required|string',
-            'product_type'  => 'nullable|string|max:100',
+            'product_type'  => 'required|string|max:100',
             'product_price' => 'nullable|numeric|min:0',
             'product_qty'   => 'required|integer|min:1',
         ]);
 
-        $id = decrypt($request->product_id);
+        try {
+            $id = decrypt($request->product_id);
+        } catch (DecryptException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid product ID.'
+            ], 400);
+        }
+
         $title = $request->product_title;
-        $img = $request->product_img;
-        $type = $request->product_type;
-        $qty = $request->product_qty;
+        $img   = $request->product_img;
+        $type  = $request->product_type;
+        $reqQty = $request->product_qty;
         $authUser = Auth::id();
 
-        if (!empty($id) && !empty($title) && !empty($img) && !empty($qty) && !empty($type)) {
-            try {
+        try {
+            if ($authUser) {
 
+                $price = 0;
+                if ($type == 'product') {
+                    $dp = DigitalProduct::find($id);
+                    $price = ($dp && $dp->price) ? $dp->price : 0;
+                } elseif ($type == 'service') {
+                    $ds = DigitalService::find($id);
+                    $price = ($ds && $ds->price) ? $ds->price : 0;
+                }
 
+                $existingCartItem = Cart::where('user_id', $authUser)->where('product_id', $id)->first();
+
+                if ($existingCartItem) {
+                    $newQty = ($type == 'product') ? 1 : ($existingCartItem->product_qty + $reqQty);
+
+                    $existingCartItem->update([
+                        'product_qty' => $newQty,
+                        'product_price' => $price
+                    ]);
+                } else {
+                    $initialQty = ($type == 'product') ? 1 : $reqQty;
+
+                    Cart::create([
+                        'user_id'       => $authUser,
+                        'product_id'    => $id,
+                        'product_title' => $title,
+                        'product_img'   => $img,
+                        'product_type'  => $type,
+                        'product_price' => $price,
+                        'product_qty'   => $initialQty,
+                    ]);
+                }
+
+                $cart = Cart::where('user_id', $authUser)->get();
+            } else {
                 $cart = session()->get('cart', []);
 
-                if (!empty($cart[$id])) {
-                    // $cart[$id]['qty']++;
+                if (isset($cart[$id])) {
+                    $cart[$id]['qty'] = ($type == 'product') ? 1 : ($cart[$id]['qty'] + $reqQty);
+
                     if (empty($cart[$id]['type'])) {
                         $cart[$id]['type'] = $type;
                     }
                 } else {
                     $cart[$id] = [
-                        'id' => $id,
+                        'id'    => $id,
                         'title' => $title,
                         'image' => $img,
-                        'type' => $type,
-                        'qty' => 1,
+                        'type'  => $type,
+                        'qty'   => ($type == 'product') ? 1 : $reqQty,
                     ];
                 }
 
                 session()->put('cart', $cart);
-
-                if ($authUser) {
-                    $this->storeCartitems();
-                }
-
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Product added to cart',
-                    'cart' => $cart
-                ]);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'something went wrong.'
-                ]);
             }
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Product added to cart successfully!',
+                'cart' => $cart
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Add To Cart Error: ' . $e->getMessage());
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong.'
+            ], 500);
         }
-
-        return response()->json([
-            'status' => false,
-            'message' => 'Invalid product data'
-        ]);
-
     }
 
     public static function storeCartitems()
@@ -226,7 +275,7 @@ class CartController extends Controller
                     if (!empty($dp) && !empty($dp->price)) {
                         $price = $dp->price;
                     }
-                } if ($item['type'] == 'service') {
+                } else if ($item['type'] == 'service') {
                     $ds = DigitalService::find($item['id']);
                     if (!empty($ds) && !empty($ds->price)) {
                         $price = $ds->price;
@@ -254,10 +303,6 @@ class CartController extends Controller
             session()->forget('cart');
 
         } catch (\Exception $e) {
-            echo '<pre>';
-            print_r($e->getMessage());
-            echo '</pre>';
-            exit;
             Log::error('Error storeCartitems() -> ' . $e->getMessage());
         }
     }

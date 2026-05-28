@@ -849,8 +849,6 @@
                 const button = $(this);
                 const productID = button.data('product-id');
                 const productType  = $(this).data('product-type');
-                console.log('productType -> ',$(this));
-
                 // const productPrice = button.data('product-price');
 
                 const productData = button.closest('.product-card');
@@ -875,18 +873,16 @@
                         },
                         success: function (response) {
                             if (response.status) {
-                                // alert(response.message);
-
                                 if (response.cart) {
                                     let cartCount = Object.keys(response.cart).length;
                                     $('.cart-count-badge').html(cartCount);
                                 }
                             } else {
                                 alert(response.message);
+                                button.prop('disabled', false);
                             }
                         },
                         error: function (xhr) {
-                            console.log(xhr.responseText);
                             if (xhr.status === 422) {
                                 let errors = xhr.responseJSON.errors;
                                 let errorMessage = '';
@@ -902,8 +898,10 @@
                             } else {
                                 alert('Something went wrong');
                             }
+                            button.prop('disabled', false);
                         },
                         complete: function () {
+                            button.prop('disabled', false);
                         }
                     });
                 }

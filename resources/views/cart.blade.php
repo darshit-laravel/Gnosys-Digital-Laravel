@@ -156,6 +156,8 @@
                                     </div>
                                 </div>
                             @endforeach
+                        @else
+                        <p>Cart is empty.</p>
                         @endif
 
                     </div>
@@ -326,6 +328,10 @@ $(document).ready(function() {
             grandTotal += rowPrice;
         });
 
+        if (grandTotal == '0' || grandTotal == '0.00') {
+            $('#cartItemsList').html('<p>Cart is empty.</p>');
+        }
+
         $('#grandTotal').text('$' + grandTotal.toFixed(2));
     }
 
@@ -351,6 +357,8 @@ $(document).ready(function() {
             success: function(response) {
                 $card.fadeOut(300, function() {
                     $(this).remove();
+
+                    $('.cart-count-badge').html(response.cart);
 
                     updateGrandTotal();
                 });
