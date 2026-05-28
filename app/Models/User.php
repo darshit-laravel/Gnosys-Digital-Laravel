@@ -52,4 +52,8 @@ class User extends Authenticatable
     public function wallet() {
         return $this->hasOne(Wallet::class, 'user_id', 'id');
     }
+
+    public function getCartItems() {
+        return $this->hasMany(Cart::class, 'user_id', 'id');
+    }
 }

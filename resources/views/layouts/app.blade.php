@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gnosys Digital — Expert-Built Digital Services & Products</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +23,7 @@
 
     <style>
         html, body {
-            max-width: 100%;    
+            max-width: 100%;
             overflow-x: hidden;
         }
         header.navbar-glass {
@@ -35,7 +36,7 @@
         .search-input-wrapper { background: #f7fbff; border-radius: 999px; padding: 4px 8px; border:1px solid rgba(15,23,42,0.06); }
         .search-input { border: none; background: transparent; height:40px; }
         .search-input:focus { outline: none; }
-        
+
         /* New Premium User Profile Styles */
         .user-trigger {
             background: #f8fafc;
@@ -244,7 +245,7 @@
         .profile-menu-item.logout-item:hover i {
             color: #b91c1c;
         }
-        main { padding-top:140px; }        
+        main { padding-top:140px; }
         /* Secondary Nav & Dropdown Styles */
         .secondary-nav {
             border-top: 1px solid rgba(15,23,42,0.04);
@@ -360,6 +361,18 @@
                     <a href="{{ route('register') }}" class="btn btn-sm btn-primary">Register</a>
                 @endguest
 
+                <!-- Modern Cart Button -->
+                <a href="{{ route('cart') }}" class="custom-cart-btn position-relative text-decoration-none d-inline-block">
+                    <div class="cart-icon-wrapper d-flex align-items-center justify-content-center">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+
+                    <!-- Badge -->
+                    <span class="cart-count-badge">
+                        {{ auth()->check() ? auth()->user()?->getCartItems?->count() : count(session('cart', [])) }}
+                    </span>
+                </a>
+
                 @auth
                     <div class="dropdown user-dropdown">
                         <button class="user-trigger dropdown-toggle d-flex align-items-center" id="userMenuBtnTop" data-bs-toggle="dropdown" aria-expanded="false">
@@ -409,7 +422,7 @@
                                 <a href="{{ route('profile') }}" class="profile-menu-item">
                                     <i class="fas fa-user-circle"></i> My Profile
                                 </a>
-                                
+
                                 <form action="{{ route('logout') }}" method="POST" class="m-0 w-100">
                                     @csrf
                                     <button type="submit" class="profile-menu-item logout-item border-0 bg-transparent w-100 text-start" style="outline: none;">
@@ -443,7 +456,7 @@
                     </div>
 
                     <ul class="navbar-nav gap-2 gap-lg-4 pb-3 pb-lg-0 w-100">
-                        
+
                         <!-- Digital Products -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="digitalProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -455,7 +468,7 @@
                                 <li><a class="dropdown-item" href="#">AI Tools & Automation Packs</a></li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center position-relative" href="#">
-                                        eBooks & Guides                
+                                        eBooks & Guides
                                     </a>
                                 </li>
                                 <li><a class="dropdown-item" href="#">Hosting Add-ons</a></li>
@@ -668,6 +681,13 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
 
     <!-- jQuery Validation -->
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
@@ -819,6 +839,77 @@
         });
     </script>
 
+    {{-- add to cart ajax --}}
+    <script>
+        $(document).ready(function () {
+
+            $(document).on('click', '.btn-add-to-cart', function (e) {
+                e.preventDefault();
+
+                const button = $(this);
+                const productID = button.data('product-id');
+                const productType  = $(this).data('product-type');
+                console.log('productType -> ',$(this));
+
+                // const productPrice = button.data('product-price');
+
+                const productData = button.closest('.product-card');
+                const productTitle = productData.find('.product-title').text();
+                const productImg = productData.find('.product-img').attr('src');
+
+                if (productID) {
+
+                    button.prop('disabled', true);
+
+                    $.ajax({
+                        url: '{{ route('addtocart') }}',
+                        type: 'POST',
+                        data: {
+                            product_id: productID,
+                            product_title: productTitle,
+                            product_img: productImg,
+                            product_type: productType,
+                            // product_price: productPrice,
+                            product_qty: 1,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            if (response.status) {
+                                // alert(response.message);
+
+                                if (response.cart) {
+                                    let cartCount = Object.keys(response.cart).length;
+                                    $('.cart-count-badge').html(cartCount);
+                                }
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log(xhr.responseText);
+                            if (xhr.status === 422) {
+                                let errors = xhr.responseJSON.errors;
+                                let errorMessage = '';
+
+                                $.each(errors, function (key, value) {
+                                    errorMessage += value[0] + '\n';
+                                });
+
+                                alert(errorMessage);
+
+                            } else if (xhr.status === 500) {
+                                alert('Internal Server Error');
+                            } else {
+                                alert('Something went wrong');
+                            }
+                        },
+                        complete: function () {
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
