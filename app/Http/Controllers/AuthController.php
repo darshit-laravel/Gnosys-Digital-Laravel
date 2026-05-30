@@ -24,7 +24,10 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember')))
         {
             $request->session()->regenerate();
-            CartController::storeCartitems(); // store cart item in database
+
+            CartController::storeCartitems(); // store cart item data in database
+            CommonController::updateUserData(); // store order and address data in database
+
             return redirect()->intended(route('home'));
         }
 
@@ -55,7 +58,8 @@ class AuthController extends Controller
         Auth::login($user);
 
         if ($user->id) {
-            CartController::storeCartitems(); // store cart item in database
+            CartController::storeCartitems(); // store cart item data in database
+            CommonController::updateUserData(); // store order and address data in database
         }
 
         return redirect()->route('home');

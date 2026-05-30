@@ -105,7 +105,7 @@
             <div class="row g-4">
 
                 {{-- ── Left: Items ── --}}
-                <div class="col-lg-8">
+                <div class="{{ $carts->isNotEmpty() ? 'col-lg-8' : 'col-lg-12' }}">
 
                     {{-- Table header (desktop only) --}}
                     <div class="row tbl-header px-3 d-none d-md-flex mb-2">
@@ -157,14 +157,34 @@
                                 </div>
                             @endforeach
                         @else
-                        <p>Cart is empty.</p>
+                            <div class="container pt-5 d-flex justify-content-center align-items-center">
+                                <div class="col-12 col-md-8 col-lg-6 text-center p-5 bg-white rounded shadow-sm border">
+
+                                    <div class="mb-4 text-secondary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-cart-x opacity-75" viewBox="0 0 16 16">
+                                        <path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z"/>
+                                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                        </svg>
+                                    </div>
+
+                                    <h2 class="fw-bold text-dark mb-3">Your Cart is Empty!</h2>
+                                    <p class="text-muted mb-5 px-3">
+                                        Looks like you haven't added anything to your cart yet. Discover some amazing products and start shopping.
+                                    </p>
+
+                                    <a href="{{ url('/') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm fw-semibold">
+                                        &larr; Back to Home
+                                    </a>
+
+                                </div>
+                            </div>
                         @endif
 
                     </div>
                 </div>
 
                 {{-- ── Right: Summary ── --}}
-                <div class="col-lg-4">
+                <div class="{{ $carts->isNotEmpty() ? 'col-lg-4' : 'd-none' }}">
                     <div class="summary-card">
                         <div class="summary-card-title">Cart Totals</div>
 
@@ -329,7 +349,7 @@ $(document).ready(function() {
         });
 
         if (grandTotal == '0' || grandTotal == '0.00') {
-            $('#cartItemsList').html('<p>Cart is empty.</p>');
+            $('#cartItemsList').html('<div class="container pt-5 d-flex justify-content-center align-items-center"><div class="col-12 col-md-8 col-lg-6 text-center p-5 bg-white rounded shadow-sm border"><div class="mb-4 text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-cart-x opacity-75" viewBox="0 0 16 16"><path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z"/><path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg></div><h2 class="fw-bold text-dark mb-3">Your Cart is Empty!</h2><p class="text-muted mb-5 px-3">Looks like you haven\'t added anything to your cart yet. Discover some amazing products and start shopping.</p><a href="{{ url('/') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm fw-semibold">&larr; Back to Home</a></div></div>');
         }
 
         $('#grandTotal').text('$' + grandTotal.toFixed(2));

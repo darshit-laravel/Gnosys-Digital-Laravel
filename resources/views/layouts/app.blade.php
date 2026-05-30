@@ -18,6 +18,8 @@
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     @stack('styles')
 
@@ -700,12 +702,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- Custom JS -->
     <script src="{{ asset('js/main.js') }}"></script>
     <!-- Video Player JS -->
     <script src="{{ asset('js/video.js') }}"></script>
     <!-- Learning JS -->
     <script src="{{ asset('js/learn.js') }}"></script>
+
+
+
     @stack('scripts')
 
     <script>

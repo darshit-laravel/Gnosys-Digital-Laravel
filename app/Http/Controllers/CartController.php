@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Country;
 use App\Models\DigitalProduct;
 use App\Models\DigitalService;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -23,7 +24,7 @@ class CartController extends Controller
 
         if ($id) {
             $carts = Cart::where('user_id', $id)->get();
-            $grandTotal = Cart::where('user_id', $id)->sum(DB::raw('product_qty * product_price'));
+            $grandTotal = Cart::where('user_id', $id)->sum('total_amount');
         } else {
             $sessionCarts = session()->get('cart', []);
 
@@ -45,6 +46,7 @@ class CartController extends Controller
                     'product_type'  => $item['type'],
                     'product_price' => $price,
                     'product_qty'   => $item['qty'],
+                    'total_amount'   => $item['qty'] * $price,
                 ];
 
                 $carts->push($cartItem);
@@ -56,7 +58,46 @@ class CartController extends Controller
     }
 
     public function checkoutIndex(Request $request) {
-        return view('checkout');
+        $id = Auth::id();
+
+        $countrys = Country::all();
+
+        $carts = collect();
+        $grandTotal = 0;
+
+        if ($id) {
+            $carts = Cart::where('user_id', $id)->get();
+            $grandTotal = Cart::where('user_id', $id)->sum('total_amount');
+        } else {
+            $sessionCarts = session()->get('cart', []);
+
+            foreach ($sessionCarts as $item) {
+                $price = 0;
+
+                if ($item['type'] == 'product') {
+                    $dp = DigitalProduct::find($item['id']);
+                    $price = !empty($dp) ? $dp->price : 0;
+                } elseif ($item['type'] == 'service') {
+                    $ds = DigitalService::find($item['id']);
+                    $price = !empty($ds) ? $ds->price : 0;
+                }
+
+                $cartItem = (object) [
+                    'product_id'    => $item['id'],
+                    'product_title' => $item['title'],
+                    'product_img'   => $item['image'],
+                    'product_type'  => $item['type'],
+                    'product_price' => $price,
+                    'product_qty'   => $item['qty'],
+                    'total_amount'   => $item['qty'] * $price,
+                ];
+
+                $carts->push($cartItem);
+                $grandTotal += ($price * $item['qty']);
+            }
+        }
+
+        return view('checkout', compact('carts', 'grandTotal', 'countrys'));
     }
 
     public function update(Request $request)
@@ -77,7 +118,14 @@ class CartController extends Controller
         if ($authUser) {
             $updated = Cart::where('user_id', $authUser)
                 ->where('product_id', $realProductId)
-                ->update(['product_qty' => $request->quantity]);
+                ->first();
+
+            if ($updated) {
+                $updated->update([
+                    'product_qty' => $request->quantity,
+                    'total_amount' => $request->quantity * $updated->product_price
+                ]);
+            }
 
             if ($updated) {
                 return response()->json([
@@ -212,6 +260,7 @@ class CartController extends Controller
                         'product_type'  => $type,
                         'product_price' => $price,
                         'product_qty'   => $initialQty,
+                        'total_amount'   => $initialQty * $price,
                     ]);
                 }
 
@@ -286,6 +335,7 @@ class CartController extends Controller
 
                 if (!empty($existingCartItem)) {
                     $existingCartItem->product_qty += $item['qty'];
+                    $existingCartItem->total_amount = $item['qty'] * $price;
                     $existingCartItem->update();
                 } else {
                     Cart::create([
@@ -296,6 +346,7 @@ class CartController extends Controller
                         'product_type' => $item['type'],
                         'product_price' => $price,
                         'product_qty' => $item['qty'],
+                        'total_amount' => $item['qty'] * $price,
                     ]);
                 }
             }
