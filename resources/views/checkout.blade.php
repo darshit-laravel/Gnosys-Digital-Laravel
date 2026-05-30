@@ -330,289 +330,295 @@
             </div>
         </div>
 
-        <div class="row g-4">
+        @if ($carts->isEmpty())
+            <div class="container pt-5 d-flex justify-content-center align-items-center">
+                <div class="col-12 col-md-8 col-lg-6 text-center p-5 bg-white rounded shadow-sm border">
 
-            <!-- Left: Form (col-lg-7) -->
-            <div class="col-lg-7">
-
-                <div class="express-checkout-box text-center">
-                    <span class="express-tag">Express Checkout</span>
-                    <button type="button" class="btn-paypal-express">
-                        Pay with <span class="paypal-bold">Pay</span><span class="paypal-gold">Pal</span>
-                    </button>
-                    <div class="divider-text-line">Or continue below</div>
-                </div>
-
-                <form id="checkoutForm" action="#" method="POST">
-                    @csrf
-
-                    <!-- Contact -->
-                    <div class="checkout-card">
-                        <h3 class="checkout-section-title d-flex align-items-center gap-2">
-                            <i class="far fa-envelope text-primary"></i> Contact information
-                        </h3>
-                        <label class="form-label-custom" for="email">Email address</label>
-                        <input type="email" id="email" class="form-control" placeholder="darshit@gnosysdigital.com" value="darshit@gnosysdigital.com" required>
+                    <div class="mb-4 text-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-cart-x opacity-75" viewBox="0 0 16 16">
+                        <path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z"/>
+                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                        </svg>
                     </div>
 
-                    <!-- Shipping Address -->
-                    <div class="checkout-card">
-                        <h3 class="checkout-section-title d-flex align-items-center gap-2">
-                            <i class="fas fa-shipping-fast text-primary"></i> Shipping address
-                        </h3>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label-custom" for="country">Country/Region</label>
-                                <select id="country" class="form-select" required>
-                                    <option value="CA" selected>Canada</option>
-                                    <option value="US">United States</option>
-                                    <option value="IN">India</option>
-                                    <option value="GB">United Kingdom</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="firstname">First name</label>
-                                <input type="text" id="firstname" class="form-control" placeholder="Darshit" value="Darshit" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="lastname">Last name</label>
-                                <input type="text" id="lastname" class="form-control" placeholder="Ranpara" value="Ranpara" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label-custom" for="address">Address</label>
-                                <input type="text" id="address" class="form-control" placeholder="1664 The East Mall" required>
-                                <div class="mt-2">
-                                    <span class="toggle-link-btn" id="toggleApartmentBtn">
-                                        <i class="fas fa-plus-circle me-1"></i> Add apartment, suite, etc.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-12" id="apartment-field-wrapper">
-                                <label class="form-label-custom" for="apartment">Apartment, suite, etc. (optional)</label>
-                                <input type="text" id="apartment" class="form-control" placeholder="Suite 225">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="city">City</label>
-                                <input type="text" id="city" class="form-control" placeholder="Toronto" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="province">Province</label>
-                                <select id="province" class="form-select" required>
-                                    <option value="ON" selected>Ontario</option>
-                                    <option value="QC">Quebec</option>
-                                    <option value="BC">British Columbia</option>
-                                    <option value="AB">Alberta</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="postalcode">Postal code</label>
-                                <input type="text" id="postalcode" class="form-control" placeholder="M9B 6H2" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="phone">Phone (optional)</label>
-                                <input type="text" id="phone" class="form-control" placeholder="+1 647 947 9546">
-                            </div>
-                            <div class="col-12 mt-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="same_address_billing" checked style="cursor:pointer;">
-                                    <label class="form-check-label fw-semibold" for="same_address_billing" style="cursor:pointer;">Use same address for billing</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Billing Address (hidden by default) -->
-                    <div class="checkout-card" id="billing-address-section">
-                        <h3 class="checkout-section-title d-flex align-items-center gap-2">
-                            <i class="far fa-credit-card text-primary"></i> Billing address
-                        </h3>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label-custom" for="billing_country">Country/Region</label>
-                                <select id="billing_country" class="form-select">
-                                    <option value="CA" selected>Canada</option>
-                                    <option value="US">United States</option>
-                                    <option value="IN">India</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="billing_firstname">First name</label>
-                                <input type="text" id="billing_firstname" class="form-control" placeholder="First Name">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="billing_lastname">Last name</label>
-                                <input type="text" id="billing_lastname" class="form-control" placeholder="Last Name">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label-custom" for="billing_address">Address</label>
-                                <input type="text" id="billing_address" class="form-control" placeholder="Billing Street Address">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="billing_city">City</label>
-                                <input type="text" id="billing_city" class="form-control" placeholder="Billing City">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="billing_province">Province</label>
-                                <select id="billing_province" class="form-select">
-                                    <option value="ON" selected>Ontario</option>
-                                    <option value="QC">Quebec</option>
-                                    <option value="BC">British Columbia</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="billing_postalcode">Postal code</label>
-                                <input type="text" id="billing_postalcode" class="form-control" placeholder="Billing Postal Code">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom" for="billing_phone">Phone (optional)</label>
-                                <input type="text" id="billing_phone" class="form-control" placeholder="Phone Number">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Shipping Options -->
-                    <div class="checkout-card">
-                        <h3 class="checkout-section-title d-flex align-items-center gap-2">
-                            <i class="fas fa-truck text-primary"></i> Shipping options
-                        </h3>
-                        <div class="option-select-box active d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center gap-3">
-                                <input class="form-check-input m-0" type="radio" name="shipping_option" id="ship_free" checked style="width:20px;height:20px;">
-                                <label class="fw-bold mb-0" for="ship_free" style="cursor:pointer;">Free shipping</label>
-                            </div>
-                            <span class="fw-bold text-success">FREE</span>
-                        </div>
-                    </div>
-
-                    <!-- Payment Options -->
-                    <div class="checkout-card">
-                        <h3 class="checkout-section-title d-flex align-items-center gap-2">
-                            <i class="fas fa-lock text-primary"></i> Payment options
-                        </h3>
-                        <div class="option-select-box active">
-                            <div class="d-flex align-items-center gap-3">
-                                <input class="form-check-input m-0" type="radio" name="payment_option" id="pay_paypal" checked style="width:20px;height:20px;">
-                                <label class="fw-bold mb-0" for="pay_paypal" style="cursor:pointer;">
-                                    PayPal <i class="fab fa-cc-paypal text-primary fa-lg ms-1"></i>
-                                </label>
-                            </div>
-                            <p class="text-muted mb-0 mt-2 ms-5" style="font-size:.85rem;">
-                                Our all-in-one checkout lets you offer PayPal, Venmo, Pay Later options and more.<br>
-                                <span class="fw-semibold">Clicking "Proceed to PayPal" will redirect you to PayPal to complete your purchase.</span>
-                            </p>
-                        </div>
-                        <div class="mt-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="add_order_note" style="cursor:pointer;">
-                                <label class="form-check-label fw-semibold" for="add_order_note" style="cursor:pointer;font-size:.9rem;">Add a note to your order</label>
-                            </div>
-                        </div>
-                        <div class="mt-3" id="order-note-wrapper">
-                            <textarea id="order_notes" class="form-control" rows="3" placeholder="Notes about your order, e.g. special delivery instructions."></textarea>
-                        </div>
-                    </div>
-
-                    <p class="text-muted" style="font-size:.85rem;font-weight:500;">
-                        By proceeding you agree to our
-                        <a href="{{ route('privacy-policy') }}" class="text-decoration-underline text-primary fw-semibold">Terms and Conditions</a> and
-                        <a href="{{ route('privacy-policy') }}" class="text-decoration-underline text-primary fw-semibold">Privacy Policy</a>.
+                    <h2 class="fw-bold text-dark mb-3">Your Cart is Empty!</h2>
+                    <p class="text-muted mb-5 px-3">
+                        Looks like you haven't added anything to your cart yet. Discover some amazing products and start shopping.
                     </p>
 
-                    <button type="submit" class="btn-complete-checkout">
-                        Proceed to PayPal <i class="fas fa-lock"></i>
-                    </button>
-
-                </form>
-            </div>
-
-            <!-- Right: Order Summary -->
-            <div class="col-lg-5">
-                <div class="order-summary-card">
-                    <h2 class="order-summary-title">Order summary</h2>
-
-                    <div class="summary-products-list">
-
-                        <!-- Product 1 -->
-                        <div class="summary-product-item">
-                            <div class="summary-img-wrapper">
-                                <img src="https://gnosysdigital.com/wp-content/uploads/2025/10/50.jpg" alt="How To Build Your Start-up Future" srcset="https://gnosysdigital.com/wp-content/uploads/2025/10/50.jpg 300w, https://gnosysdigital.com/wp-content/uploads/2025/10/50-150x150.jpg 150w, https://gnosysdigital.com/wp-content/uploads/2025/10/50-100x100.jpg 100w" sizes="80px" width="80" height="80">
-                                <span class="summary-qty-badge">1</span>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h4 class="summary-product-title">How To Build Your Start-up Future</h4>
-                                <div class="text-muted" style="font-size:.8rem;">$19.99</div>
-                                <p class="summary-product-desc">Every day, we expand and tackle new challenges together...</p>
-                            </div>
-                            <div class="fw-bold ms-2" style="font-size:.95rem;min-width:70px;text-align:right;">$39.98</div>
-                        </div>
-
-                        <!-- Product 2 -->
-                        <div class="summary-product-item">
-                            <div class="summary-img-wrapper">
-                                <img src="https://gnosysdigital.com/wp-content/uploads/2025/10/50.jpg" alt="How To Build Your Start-up Future" srcset="https://gnosysdigital.com/wp-content/uploads/2025/10/50.jpg 300w, https://gnosysdigital.com/wp-content/uploads/2025/10/50-150x150.jpg 150w, https://gnosysdigital.com/wp-content/uploads/2025/10/50-100x100.jpg 100w" sizes="80px" width="80" height="80">
-                                <span class="summary-qty-badge">1</span>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h4 class="summary-product-title">Affiliate Marketing Landing Page Template</h4>
-                                <div class="text-muted" style="font-size:.8rem;">$6.99</div>
-                                <p class="summary-product-desc">Professionally Designed Affiliate Program Page.</p>
-                            </div>
-                            <div class="fw-bold ms-2" style="font-size:.95rem;min-width:70px;text-align:right;">$6.99</div>
-                        </div>
-
-                        <!-- Product 3 -->
-                        <div class="summary-product-item">
-                            <div class="summary-img-wrapper">
-                                <img src="https://gnosysdigital.com/wp-content/uploads/2025/10/50.jpg" alt="How To Build Your Start-up Future" srcset="https://gnosysdigital.com/wp-content/uploads/2025/10/50.jpg 300w, https://gnosysdigital.com/wp-content/uploads/2025/10/50-150x150.jpg 150w, https://gnosysdigital.com/wp-content/uploads/2025/10/50-100x100.jpg 100w" sizes="80px" width="80" height="80">
-                                <span class="summary-qty-badge">1</span>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h4 class="summary-product-title">30 Days Instagram Management</h4>
-                                <div class="text-muted" style="font-size:.8rem;">$150.00</div>
-                                <p class="summary-product-desc">What you can expect: 60 Post with proper hashtags...</p>
-                            </div>
-                            <div class="fw-bold ms-2" style="font-size:.95rem;min-width:70px;text-align:right;">$150.00</div>
-                        </div>
-
-                    </div>
-
-                    <!-- Coupon Drawer -->
-                    <div>
-                        <button type="button" class="checkout-coupon-toggle" id="checkoutCouponBtn">
-                            <span><i class="fas fa-ticket-alt me-2 text-primary"></i> Add coupons</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div id="checkoutCouponDrawer" style="display:none;padding:15px 0;border-bottom:1px solid var(--g-border);">
-                            <div class="d-flex gap-2">
-                                <input type="text" class="form-control" id="checkoutCouponInput" placeholder="Coupon code" style="border-radius:8px;font-size:.85rem;">
-                                <button type="button" class="btn btn-primary px-3" id="btnApplyCheckoutCoupon" style="border-radius:8px;font-weight:600;font-size:.8rem;">Apply</button>
-                            </div>
-                            <div id="checkoutCouponMsg" style="font-size:.75rem;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Cost breakdown -->
-                    <div class="checkout-cost-row mt-3">
-                        <span class="text-muted fw-semibold">Subtotal</span>
-                        <span class="fw-bold" id="checkout-subtotal-val">$196.97</span>
-                    </div>
-                    <div class="checkout-cost-row" id="checkout-discount-row" style="display:none!important;">
-                        <span class="text-muted fw-semibold">Discount (<span id="checkout-discount-percent">0</span>%)</span>
-                        <span class="fw-bold text-danger" id="checkout-discount-val">-$0.00</span>
-                    </div>
-                    <div class="checkout-cost-row pb-2">
-                        <span class="text-muted fw-semibold">Free shipping</span>
-                        <span class="fw-bold text-success text-uppercase" style="font-size:.8rem;">Free</span>
-                    </div>
-                    <div class="checkout-cost-total">
-                        <span class="checkout-total-label">Estimated total</span>
-                        <span class="checkout-total-val" id="checkout-total-val">$196.97</span>
-                    </div>
+                    <a href="{{ url('/') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm fw-semibold">
+                        &larr; Back to Home
+                    </a>
 
                 </div>
             </div>
+        @else
+            <div class="checkout-form-layout">
+                <form id="checkoutForm" method="POST">
+                    <div class="row g-4">
 
-        </div>
+                        <!-- Left: Form (col-lg-7) -->
+                        <div class="col-lg-7">
+
+                            <div class="express-checkout-box text-center">
+                                <span class="express-tag">Express Checkout</span>
+                                <button type="button" class="btn-paypal-express">
+                                    Pay with <span class="paypal-bold">Pay</span><span class="paypal-gold">Pal</span>
+                                </button>
+                                <div class="divider-text-line">Or continue below</div>
+                            </div>
+
+                                <!-- Contact -->
+                                <div class="checkout-card">
+                                    <h3 class="checkout-section-title d-flex align-items-center gap-2">
+                                        <i class="far fa-envelope text-primary"></i> Contact information
+                                    </h3>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label-custom" for="first_name">First name</label>
+                                            <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First name" value="{{ !empty(auth()->user()) ? auth()->user()?->name : '' }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label-custom" for="last_name">Last name</label>
+                                            <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last name" value="" >
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label-custom" for="email">Email address</label>
+                                            <input type="email" id="email" name="email" class="form-control" placeholder="example@gmail.com" value="{{ !empty(auth()->user()) ? auth()->user()?->email : '' }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label-custom" for="phone">Phone (optional)</label>
+                                            <input type="text" id="phone" name="phone" class="form-control" placeholder="" value="{{ !empty(auth()->user()) ? auth()->user()?->phone : '' }}">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Shipping Address -->
+                                <div class="checkout-card">
+                                    <h3 class="checkout-section-title d-flex align-items-center gap-2">
+                                        <i class="fas fa-shipping-fast text-primary"></i> Shipping address
+                                    </h3>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label class="form-label-custom" for="shipping_address">Address</label>
+                                            <input type="text" id="shipping_address" name="shipping_address" class="form-control" placeholder="1664 The East Mall" value="{{ auth()->user()?->address?->shipping_address }}">
+                                            <div class="mt-2">
+                                                <span class="toggle-link-btn" id="toggleApartmentBtn">
+                                                    <i class="fas fa-plus-circle me-1"></i> Add apartment, suite, etc.
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12" id="apartment-field-wrapper">
+                                            <label class="form-label-custom" for="shipping_apartment">Apartment, suite, etc. (optional)</label>
+                                            <input type="text" id="shipping_apartment" name="shipping_apartment" class="form-control" placeholder="Suite 225" value="{{ auth()->user()?->address?->shipping_apartment }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label-custom" for="shipping_country">Country/Region</label>
+                                            <select id="shipping_country" name="shipping_country" class="form-select">
+                                                <option value="">Select country</option>
+                                                @if ($countrys)
+                                                    @foreach ($countrys as $country)
+                                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label-custom" for="shipping_province">Province</label>
+                                            <select id="shipping_province" name="shipping_province" class="form-select" >
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label-custom" for="shipping_city">City</label>
+                                            <input type="text" id="shipping_city" name="shipping_city" class="form-control" placeholder="" value="{{ auth()->user()?->address?->shipping_city }}">
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="use_same_address_for_billing" name="use_same_address_for_billing" value="1" checked style="cursor:pointer;">
+                                                <label class="form-check-label fw-semibold" for="use_same_address_for_billing" style="cursor:pointer;">Use same address for billing</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Billing Address (hidden by default) -->
+                                <div class="checkout-card" id="billing-address-section">
+                                    <h3 class="checkout-section-title d-flex align-items-center gap-2">
+                                        <i class="far fa-credit-card text-primary"></i> Billing address
+                                    </h3>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label class="form-label-custom" for="billing_address">Address</label>
+                                            <input type="text" id="billing_address" name="billing_address" class="form-control" placeholder="Billing Street Address" value="{{ auth()->user()?->address?->billing_address }}">
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label-custom" for="billing_apartment">Apartment, suite, etc. (optional)</label>
+                                            <input type="text" id="billing_apartment" name="billing_apartment" class="form-control" placeholder="Suite 225" value="{{ auth()->user()?->address?->billing_apartment }}">
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="form-label-custom" for="billing_country">Country/Region</label>
+                                            <select id="billing_country" name="billing_country" class="form-select billing-country">
+                                                <option value="">Select country</option>
+                                                @if ($countrys)
+                                                    @foreach ($countrys as $country)
+                                                        <option value="{{ $country->id }}" {{ auth()->user()?->address?->billing_country == $country->id ? 'selected' : '' }} >{{ $country->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label-custom" for="billing_province">Province</label>
+                                            <select id="billing_province" name="billing_province" class="form-select billing-province">
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label-custom" for="billing_city">City</label>
+                                            <input type="text" id="billing_city" name="billing_city" class="form-control" placeholder="" value="{{ auth()->user()?->address?->billing_city }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Shipping Options -->
+                                <div class="checkout-card">
+                                    <h3 class="checkout-section-title d-flex align-items-center gap-2">
+                                        <i class="fas fa-truck text-primary"></i> Shipping options
+                                    </h3>
+                                    <div class="option-select-box active d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <input class="form-check-input m-0" type="radio" name="shipping_option" id="ship_free" checked style="width:20px;height:20px;">
+                                            <label class="fw-bold mb-0" for="ship_free" style="cursor:pointer;">Free shipping</label>
+                                        </div>
+                                        <span class="fw-bold text-success">FREE</span>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Options -->
+                                <div class="checkout-card">
+                                    <h3 class="checkout-section-title d-flex align-items-center gap-2">
+                                        <i class="fas fa-lock text-primary"></i> Payment options
+                                    </h3>
+                                    <div class="option-select-box active">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <input class="form-check-input m-0" type="radio" name="payment_option" id="pay_paypal" checked style="width:20px;height:20px;">
+                                            <label class="fw-bold mb-0" for="pay_paypal" style="cursor:pointer;">
+                                                PayPal <i class="fab fa-cc-paypal text-primary fa-lg ms-1"></i>
+                                            </label>
+                                        </div>
+                                        <p class="text-muted mb-0 mt-2 ms-5" style="font-size:.85rem;">
+                                            Our all-in-one checkout lets you offer PayPal, Venmo, Pay Later options and more.<br>
+                                            <span class="fw-semibold">Clicking "Proceed to PayPal" will redirect you to PayPal to complete your purchase.</span>
+                                        </p>
+                                    </div>
+                                    <div class="mt-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="add_order_note" style="cursor:pointer;">
+                                            <label class="form-check-label fw-semibold" for="add_order_note" style="cursor:pointer;font-size:.9rem;">Add a note to your order</label>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3" id="order-note-wrapper">
+                                        <textarea id="order_notes" class="form-control" rows="3" placeholder="Notes about your order, e.g. special delivery instructions."></textarea>
+                                    </div>
+                                </div>
+
+                                <p class="text-muted" style="font-size:.85rem;font-weight:500;">
+                                    By proceeding you agree to our
+                                    <a href="{{ route('privacy-policy') }}" class="text-decoration-underline text-primary fw-semibold">Terms and Conditions</a> and
+                                    <a href="{{ route('privacy-policy') }}" class="text-decoration-underline text-primary fw-semibold">Privacy Policy</a>.
+                                </p>
+
+                                <button type="submit" class="btn-complete-checkout">
+                                    Proceed to PayPal <i class="fas fa-lock"></i>
+                                </button>
+
+                        </div>
+
+                        <!-- Right: Order Summary -->
+                        <div class="col-lg-5">
+                            <div class="order-summary-card">
+                                <h2 class="order-summary-title">Order summary</h2>
+
+                                <div class="summary-products-list">
+
+                                    @if ($carts->isNotEmpty())
+                                        @foreach ($carts as $key => $cart)
+                                            <!-- Product 1 -->
+                                            <div class="summary-product-item">
+                                                <input type="hidden" name="order_product_id[{{ $key }}]" class="order-product-id" value="{{ encrypt($cart->product_id) }}">
+                                                <div class="summary-img-wrapper">
+                                                    <img src="{{ $cart->product_img }}" alt="{{ $cart->product_title }}" srcset="{{ $cart->product_img . ' 300w' }}, {{ $cart->product_img . ' 150w' }} , {{ $cart->product_img . ' 100w' }}" sizes="80px" width="80" height="80">
+                                                    <span class="summary-qty-badge">
+                                                        <input type="hidden" name="order_product_qty[{{ $key }}]" class="order-product-qty" value="{{ $cart->product_qty }}">
+                                                        {{ $cart->product_qty }}
+                                                    </span>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <input type="hidden" name="order_product_title[{{ $key }}]" class="order-product-title" value="{{ $cart->product_title }}">
+                                                    <h4 class="summary-product-title">
+                                                        {{ $cart->product_title }}
+                                                    </h4>
+                                                    <div class="text-muted" style="font-size:.8rem;">
+                                                        <input type="hidden" name="order_product_price[{{ $key }}]" class="order-product-price" value="{{ $cart->product_price }}">
+                                                        ${{ number_format($cart->product_price, 2) }}
+                                                    </div>
+                                                    {{-- <p class="summary-product-desc">Every day, we expand and tackle new challenges together...</p> --}}
+                                                </div>
+                                                <div class="fw-bold ms-2" style="font-size:.95rem;min-width:70px;text-align:right;">
+                                                    <input type="hidden" name="order_product_total_amount[{{ $key }}]" class="order-product-total-amount" value="{{ $cart->product_qty * $cart->product_price }}">
+                                                    ${{ number_format($cart->product_qty * $cart->product_price, 2) }}
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+
+                                </div>
+
+                                <!-- Coupon Drawer -->
+                                <div>
+                                    <button type="button" class="checkout-coupon-toggle" id="checkoutCouponBtn">
+                                        <span><i class="fas fa-ticket-alt me-2 text-primary"></i> Add coupons</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div id="checkoutCouponDrawer" style="display:none;padding:15px 0;border-bottom:1px solid var(--g-border);">
+                                        <div class="d-flex gap-2">
+                                            <input type="text" class="form-control" id="checkoutCouponInput" placeholder="Coupon code" style="border-radius:8px;font-size:.85rem;">
+                                            <button type="button" class="btn btn-primary px-3" id="btnApplyCheckoutCoupon" style="border-radius:8px;font-weight:600;font-size:.8rem;">Apply</button>
+                                        </div>
+                                        <div id="checkoutCouponMsg" style="font-size:.75rem;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Cost breakdown -->
+                                <div class="checkout-cost-row mt-3">
+                                    <span class="text-muted fw-semibold">Subtotal</span>
+                                    <span class="fw-bold" id="checkout-subtotal-val">${{ number_format($grandTotal, 2) }}</span>
+                                </div>
+                                <div class="checkout-cost-row" id="checkout-discount-row" style="display:none!important;">
+                                    <span class="text-muted fw-semibold">Discount (<span id="checkout-discount-percent">0</span>%)</span>
+                                    <span class="fw-bold text-danger" id="checkout-discount-val">-$0.00</span>
+                                </div>
+                                <div class="checkout-cost-row pb-2">
+                                    <span class="text-muted fw-semibold">Free shipping</span>
+                                    <span class="fw-bold text-success text-uppercase" style="font-size:.8rem;">Free</span>
+                                </div>
+                                <div class="checkout-cost-total">
+                                    <span class="checkout-total-label">Estimated total</span>
+                                    <span class="checkout-total-val" id="checkout-total-val">
+                                        <input type="hidden" name="order_product_grand_total" class="order-product-grand-total" value="{{ $grandTotal }}">
+                                        ${{ number_format($grandTotal, 2) }}
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        @endif
+
     </div>
 </div>
 
@@ -630,11 +636,11 @@
                 <div class="p-3 bg-light rounded-3 mb-4 text-start">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Transaction ID:</span>
-                        <strong>PAY-89520489A12</strong>
+                        <strong id="order-transaction-id"></strong>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span class="text-muted">Total Paid:</span>
-                        <strong class="text-success" id="modal-total-paid">$196.97</strong>
+                        <strong class="text-success" id="order-grand-total">$0</strong>
                     </div>
                 </div>
                 <a href="{{ url('/') }}" class="btn btn-success px-4 py-2 rounded-3 fw-semibold" style="font-family:var(--font-heading);">Return to Homepage</a>
@@ -647,17 +653,119 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
+
+        $('#shipping_country').select2();
+        $('#shipping_province').select2();
+
+        var shippingCountryID =  '{{ auth()->user()?->address?->shipping_country }}';
+        var shippingProvinceID =  '{{ auth()->user()?->address?->shipping_province }}';
+
+        $('#shipping_country').on('change', function() {
+
+            var countryId = $(this).val();
+            var shippingProvinceDropdown = $('#shipping_province');
+
+            shippingProvinceDropdown.empty().append('<option value="" selected disabled>Loading...</option>');
+
+            shippingProvinceDropdown.trigger('change');
+
+            if(countryId) {
+                $.ajax({
+                    url: '{{ route('get.states') }}',
+                    type: 'POST',
+                    data: {
+                        id: countryId
+                    },
+                    success: function(response) {
+                        shippingProvinceDropdown.empty();
+                        shippingProvinceDropdown.append('<option value="" selected disabled>Select Province/State</option>');
+
+                        if(response.status === 'success') {
+                            $.each(response.states, function(key, state) {
+                                var selected = shippingProvinceID == state.id ? 'selected' : '';
+                                shippingProvinceDropdown.append('<option value="' + state.id + '" data-id="' + state.id + '" '+selected+' >' + state.name + '</option>');
+                            });
+                        }
+
+                        shippingProvinceDropdown.trigger('change');
+                    },
+                    error: function() {
+                        alert('Could not fetch states. Please try again.');
+                        shippingProvinceDropdown.empty().append('<option value="" selected disabled>Error loading states</option>');
+                        shippingProvinceDropdown.trigger('change');
+                    }
+                });
+            } else {
+                shippingProvinceDropdown.empty().append('<option value="" selected disabled>Select Country First</option>');
+                shippingProvinceDropdown.trigger('change');
+            }
+        });
+
+        if (shippingCountryID && shippingProvinceID) {
+            $('#shipping_country').val(shippingCountryID).trigger('change');
+        }
+
+        $('#billing_country').select2();
+        $('#billing_province').select2();
+
+        var billingCountryID =  '{{ auth()->user()?->address?->billing_country }}';
+        var billingProvinceID =  '{{ auth()->user()?->address?->billing_province }}';
+
+        $('#billing_country').on('change', function() {
+            var countryId = $(this).val();
+            var billingProvinceDropdown = $('#billing_province');
+
+            billingProvinceDropdown.empty().append('<option value="" selected disabled>Loading...</option>');
+
+            billingProvinceDropdown.trigger('change');
+
+            if(countryId) {
+                $.ajax({
+                    url: '{{ route('get.states') }}',
+                    type: 'POST',
+                    data: {
+                        id: countryId
+                    },
+                    success: function(response) {
+                        billingProvinceDropdown.empty();
+                        billingProvinceDropdown.append('<option value="" selected disabled>Select Province/State</option>');
+
+                        if(response.status === 'success') {
+                            $.each(response.states, function(key, state) {
+                                var selected = billingProvinceID == state.id ? 'selected' : '';
+                                billingProvinceDropdown.append('<option value="' + state.id + '" data-id="' + state.id + '" '+selected+' >' + state.name + '</option>');
+                            });
+                        }
+
+                        billingProvinceDropdown.trigger('change');
+                    },
+                    error: function() {
+                        alert('Could not fetch states. Please try again.');
+                        billingProvinceDropdown.empty().append('<option value="" selected disabled>Error loading states</option>');
+                        billingProvinceDropdown.trigger('change');
+                    }
+                });
+            } else {
+                billingProvinceDropdown.empty().append('<option value="" selected disabled>Select Country First</option>');
+                billingProvinceDropdown.trigger('change');
+            }
+        });
+
+        if (billingCountryID && billingProvinceID) {
+            $('#billing_country').val(billingCountryID).trigger('change');
+        }
+
         $('#toggleApartmentBtn').on('click', function() {
             $('#apartment-field-wrapper').slideDown(300);
             $(this).parent().fadeOut(200);
         });
-        $('#same_address_billing').on('change', function() {
+        $('#use_same_address_for_billing').on('change', function() {
             if ($(this).is(':checked')) {
                 $('#billing-address-section').slideUp(300);
-                $('#billing-address-section').find('input,select').prop('required', false);
+                $('#billing-address-section').find('input,select').prop('', false);
             } else {
                 $('#billing-address-section').slideDown(300);
-                $('#billing_firstname,#billing_lastname,#billing_address,#billing_city,#billing_postalcode').prop('required', true);
+                $('#billing_firstname,#billing_lastname,#billing_address,#billing_city,#billing_postalcode').prop('', true);
             }
         });
         $('#add_order_note').on('change', function() {
@@ -667,16 +775,166 @@
             $('#checkoutCouponDrawer').slideToggle(300);
         });
 
-        $('#checkoutForm').on('submit', function(e) {
-            e.preventDefault();
-            $('#modal-total-paid').text($('#checkout-total-val').text());
-            new bootstrap.Modal(document.getElementById('orderSuccessModal')).show();
-        });
+        // $('#checkoutForm').on('submit', function(e) {
+        //     e.preventDefault();
+        //     $('#modal-total-paid').text($('#checkout-total-val').text());
+        //     new bootstrap.Modal(document.getElementById('orderSuccessModal')).show();
+        // });
 
         $('.btn-paypal-express').on('click', function() {
             $('#modal-total-paid').text($('#checkout-total-val').text());
             new bootstrap.Modal(document.getElementById('orderSuccessModal')).show();
         });
+
+        // Toggle Billing Address Section visibility based on checkbox status
+        $('#use_same_address_for_billing').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#billing-address-section').slideUp();
+                // Clear any lingering billing validation errors when hidden
+                validator.resetForm();
+            } else {
+                $('#billing-address-section').slideDown();
+            }
+        });
+
+        var validator = $("#checkoutForm").validate({
+            rules: {
+                email: {
+                    required : true,
+                    email: true
+                },
+                shipping_country: {
+                    required : true
+                },
+                first_name: {
+                    required : true,
+                    minlength: 2
+                },
+                last_name: {
+                    required : false,
+                    minlength: 2
+                },
+                shipping_address: {
+                    required : true
+                },
+                shipping_city: {
+                    required : true
+                },
+                shipping_province: {
+                    required : true
+                },
+                shipping_postal_code: {
+                    required : true
+                },
+                billing_country: {
+                    required : {
+                        depends: function(element) {
+                            return !$("#use_same_address_for_billing").is(":checked");
+                        }
+                    }
+                },
+                billing_address: {
+                    required : {
+                        depends: function(element) {
+                            return !$("#use_same_address_for_billing").is(":checked");
+                        }
+                    }
+                },
+                billing_city: {
+                    required : {
+                        depends: function(element) {
+                            return !$("#use_same_address_for_billing").is(":checked");
+                        }
+                    }
+                },
+                billing_province: {
+                    required : {
+                        depends: function(element) {
+                            return !$("#use_same_address_for_billing").is(":checked");
+                        }
+                    }
+                },
+            },
+            messages: {
+                email: {
+                    required : "Please enter your email address",
+                    email: "Please enter a valid email address"
+                },
+                first_name: "first name is required.",
+                last_name: "last name is required.",
+                shipping_address: "Shipping address is required.",
+                shipping_city: "Shipping city is required.",
+                shipping_province: "Shipping province is required.",
+                shipping_country: "Please select a shipping country",
+
+                billing_address: "Billing address is required.",
+                billing_city: "Billing city is required.",
+                billing_province: "Billing province is required.",
+                billing_country: "Please select a billing country"
+            },
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid').removeClass('is-valid');
+
+                if ($(element).hasClass('select2-hidden-accessible')) {
+                    $(element).next('.select2-container').find('.select2-selection').addClass('border border-danger');
+                }
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid').addClass('is-valid');
+
+                if ($(element).hasClass('select2-hidden-accessible')) {
+                    $(element).next('.select2-container').find('.select2-selection').removeClass('border border-danger');
+                }
+            },
+            errorPlacement: function(error, element) {
+                if (element.hasClass('select2-hidden-accessible')) {
+                    error.insertAfter(element.next('.select2-container'));
+                } else if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+                let submitBtn = $(form).find('button[type="submit"]');
+                let originalBtnText = submitBtn.html();
+
+                $.ajax({
+                    url: '{{ route('orders.store') }}',
+                    type: 'POST',
+                    data: $(form).serialize(),
+                    beforeSend: function() {
+                        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            form.reset();
+
+                            $('#orderSuccessModal').modal('show');
+
+                            $('#order-transaction-id').text(response.data.transection_id);
+
+                            $('#order-grand-total').text(`$${response.data.order_grand_total}`);
+
+                            $('.cart-count-badge').html('0');
+
+                            $('.checkout-form-layout').empty().html('<div class="container pt-5 d-flex justify-content-center align-items-center"><div class="col-12 col-md-8 col-lg-6 text-center p-5 bg-white rounded shadow-sm border"><div class="mb-4 text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-cart-x opacity-75" viewBox="0 0 16 16"><path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z"/><path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg></div><h2 class="fw-bold text-dark mb-3">Your Cart is Empty!</h2><p class="text-muted mb-5 px-3">Looks like you haven\'t added anything to your cart yet. Discover some amazing products and start shopping.</p><a href="{{ url('/') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm fw-semibold">&larr; Back to Home</a></div></div>');
+
+                            // $('#orderSuccessModal .order-id-display').text(response.order_number);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Something went wrong: ' + xhr.responseJSON.message);
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false).html(originalBtnText);
+                    }
+                });
+            }
+        });
+
     });
 </script>
 @endpush
