@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [App\Http\Controllers\AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register.post');
 });
+
+Route::post('/order/store', [OrderController::class, 'store'])->name('orders.store');
+
+Route::POST('/get-data/get-states', [CommonController::class, 'getState'])->name('get.states');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::get('/checkout', [CartController::class, 'checkoutIndex'])->name('checkout');
