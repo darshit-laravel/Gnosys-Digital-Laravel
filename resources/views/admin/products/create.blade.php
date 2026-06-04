@@ -116,6 +116,10 @@
                         </div>
                     </div>
 
+                    <hr>
+                    @include('admin.products.customfield', ['customfields' => $customfields])
+                    <hr>
+
                     <div class="d-flex justify-content-between mt-4">
                         <a href="{{ route('admin.products.index') }}" class="btn btn-light">Back to List</a>
                         <button type="submit" class="btn btn-primary px-5">Create Product</button>

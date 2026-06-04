@@ -230,7 +230,7 @@
                 <a href="{{ route('admin.products.create') }}" class="nav-link">
                     <i class="fas fa-plus"></i> Add Product
                 </a>
-                <a href="{{ route('admin.custom.fields.create') }}" class="nav-link">
+                <a href="{{ route('admin.custom.fields.index') }}" class="nav-link">
                     <i class="fas fa-plus"></i> Add Custom Field
                 </a>
 

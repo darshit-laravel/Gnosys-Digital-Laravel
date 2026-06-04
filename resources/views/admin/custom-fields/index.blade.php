@@ -16,57 +16,52 @@
             <table class="table table-hover align-middle">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Wallet Balance</th>
-                        <th>Phone</th>
+                        <th>Field Type</th>
+                        <th>Field Name</th>
+                        <th>Module Type</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($users as $user)
-                    <tr>
-                        <td>
-                            <div class="fw-bold">{{ $user->name }}</div>
-                        </td>
-                        <td>{{ $user->email }}</td>
-                        <td>
-                            <div>
-                                <span>
-                                    {{ number_format($user->wallet?->balance ?? 0, 2) }}
-                                </span>
-                                <span class="checkHistoryBtn cursor-pointer" role="button" data-id="{{encrypt($user->id)}}">
-                                    <i class="fa fa-info-circle"></i>
-                                </span>
-                            </div>
-                        </td>
-                        <td>{{ $user->phone ?? '-' }}</td>
-                        <td>
-                            @if($user->is_active)
-                                <span class="badge bg-success">Active</span>
-                            @else
-                                <span class="badge bg-danger">Inactive</span>
-                            @endif
-                        </td>
-                        <td>
-                            <div class="table-actions">
-                                <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-primary btn-sm" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this admin?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
+                    @if ($customfields->isNotEmpty())
+                        @foreach($customfields as $field)
+                            <tr>
+                                <td>{{ $field?->fieldType?->name }}</td>
+                                <td>{{ $field->name }}</td>
+                                <td>{{ ucfirst($field->module_type) }}</td>
+                                <td>
+                                    @if($field->status)
+                                        <span class="badge bg-success">Active</span>
+                                    @else
+                                        <span class="badge bg-danger">Inactive</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <a href="{{ route('admin.custom.fields.edit', [ 'custom_field' => $field ]) }}" class="btn btn-primary btn-sm" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('admin.custom.fields.destroy', [ 'custom_field' => $field ]) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this admin?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <td colspan="5" class="text-center">No recode found!</td>
+                    @endif
                 </tbody>
             </table>
+             <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-4">
+                {{ $customfields->links() }}
+            </div>
         </div>
     </div>
 </div>

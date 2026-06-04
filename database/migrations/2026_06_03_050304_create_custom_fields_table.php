@@ -16,8 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('custom_field_type_id');
             $table->string('name');
             $table->string('slug');
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->enum('module_type', ['product', 'service']);
+            $table->longText('params')->nullable();
             $table->longText('options')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

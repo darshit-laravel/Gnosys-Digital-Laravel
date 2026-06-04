@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DigitalProduct;
 use App\Models\Category;
+use App\Models\CustomField;
 use Illuminate\Support\Str;
 
 class DigitalProductController extends Controller
@@ -21,12 +22,12 @@ class DigitalProductController extends Controller
         }
 
         $query = DigitalProduct::query();
-        
+
         // Filter by category
         if ($request->category) {
             $query->byCategory($request->category);
         }
-        
+
         // Search functionality
         if ($request->search) {
             $query->where(function($q) use ($request) {
@@ -34,10 +35,10 @@ class DigitalProductController extends Controller
                   ->orWhere('description', 'like', '%' . $request->search . '%');
             });
         }
-        
+
         $products = $query->ordered()->paginate(10);
         $categories = Category::where('type', 'product')->get();
-        
+
         return view('admin.products.index', compact('products', 'categories'));
     }
 
@@ -47,8 +48,15 @@ class DigitalProductController extends Controller
             return abort(403, 'Unauthorized action.');
         }
 
+        $customfields = CustomField::query()->select([
+            'id','custom_field_type_id','name','slug','module_type','params','options','status'
+            ])
+            ->where('module_type', 'product')
+            ->where('status', 1)
+            ->get();
+
         $categories = Category::where('type', 'product')->get();
-        return view('admin.products.create', compact('categories'));
+        return view('admin.products.create', compact('categories', 'customfields'));
     }
 
     /**
@@ -164,7 +172,7 @@ class DigitalProductController extends Controller
         }
 
         $product->delete();
-        
+
         return redirect()->route('admin.products.index')
             ->with('success', 'Digital product deleted successfully!');
     }
